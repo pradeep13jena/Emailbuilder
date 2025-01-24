@@ -1,10 +1,12 @@
 // Importing packages
-import dotenv from "dotenv";
-import mongoose from "mongoose";
-import express from "express";
 import cors from "cors";
-import path, { dirname } from 'path';
+import dotenv from "dotenv";
+import express from "express";
+import mongoose from "mongoose";
+import fileUpload from "express-fileupload";
+import multer from "multer";
 import { fileURLToPath } from 'url';
+import path, { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -19,13 +21,12 @@ const app = express();
 
 // Setting up middlewares
 app.use(express.json());
-app.set("view engine", "ejs");
 app.use(
   cors({
     origin: "http://localhost:5173",
   })
 );
-app.use(express.static(path.join(__dirname, 'public')));
+
 app.use('/node_modules', express.static('node_modules'));
 
 // Setting up mongoDB

@@ -185,9 +185,10 @@ export const changeText = async (req, res) => {
       return res.status(404).json({ message: 'Item not found in template' });
     }
 
-    item.content = text;
-    
-    await template.save();
+    if(item.type === "text" || item.type === "button"){
+      item.content = text;
+      await template.save();
+    }
 
     const newTemplate = await TemplateModel.findOne()
     res.status(200).json(newTemplate);

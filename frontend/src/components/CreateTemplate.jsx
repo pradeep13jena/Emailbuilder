@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
 // Importing redux store and slices
@@ -10,6 +10,7 @@ import { setSelectedItem } from '../features/selectedItemSlice.js'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 export default function CreateTemplate() {
+  const [file, setFile] = useState(null)
   const dispatch = useDispatch()
 
   const template = useSelector((state) => state.template.template);
@@ -35,6 +36,33 @@ export default function CreateTemplate() {
     }
   };
 
+  const handleFileChange = async (e) => {
+    const selectedFile = e.target.files[0]
+    setFile(selectedFile)
+  }
+
+  const handleFileUpload = async (e) => {
+    e.preventDefault()
+    
+    if(!file) {
+      alert("No file selected")
+      return
+    }
+
+    const formData = new FormData()
+    formData.append("file", file)
+    formData.append("upload_preset", "cloudinary_upload")
+    formData.append("cloud_name", "dwqukaxyb")
+
+    const response = await axios.post(`https://api.cloudinary.com/v1_1/dwqukaxyb/image/upload`, formData)
+
+    const res = await axios.put(`http://localhost:5000/template/image/${selectedItem}`, 
+      {content : response.data.url}
+    )
+
+    dispatch(setTemplate(res.data))
+  } 
+
   useEffect(() => {
     getTemplate()
   }, [])
@@ -53,7 +81,7 @@ export default function CreateTemplate() {
               item.link ? (
                 <a href={item.link} target="_blank" onClick={(event) => event.preventDefault()}>
                   <p className='relative' style={item.style}>{item.content}</p>
-                  <span onClick={() => deleteItem(item._id)} className="text-red-500 absolute bottom-0 right-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 w-10 h-10 flex justify-center items-center cursor-pointer">
+                  <span onClick={() => deleteItem(item._id)} className="text-red-500 z-50 bg-white absolute bottom-0 right-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 w-10 h-10 flex justify-center items-center cursor-pointer">
                     <DeleteOutlineIcon />
                   </span>
                 </a>
@@ -68,14 +96,22 @@ export default function CreateTemplate() {
             ) : item.type === 'image' ? (
               item.link ? (
                 <a href={item.link} target="_blank">
-                  <img style={item.style} src={item.content} alt="template" className="imagesize relative" />
+                  <img style={item.style} src={item.content} alt="image" className="block relative" />
+                  <form onSubmit={handleFileUpload}  className='flex flex-col justify-start items-start gap-3 absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 bg-gray-100 p-2 rounded-tr-2xl'>
+                    <input type="file" onChange={handleFileChange}/>
+                    <button className='px-2 py-1 border-2 border-gray-500 hover:border-black rounded-lg transition-all duration-150 bg-gray-200' type="submit">Upload</button>
+                  </form>
                   <span onClick={() => deleteItem(item._id)} className="text-red-500 absolute bottom-0 right-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 w-10 h-10 flex justify-center items-center cursor-pointer">
                     <DeleteOutlineIcon />
                   </span>
                 </a>
               ) : (
                 <>
-                  <img style={item.style} src={item.content} alt="template" className="imagesize" />
+                  <img style={item.style} src={item.content} alt="image" className="block relative" />
+                  <form onSubmit={handleFileUpload}  className='flex flex-col justify-start items-start gap-3 absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 bg-gray-100 p-2 rounded-tr-2xl'>
+                    <input type="file" onChange={handleFileChange}/>
+                    <button className='px-2 py-1 border-2 border-gray-500 hover:border-black rounded-lg transition-all duration-150 bg-gray-200' type="submit">Upload</button>
+                  </form>
                   <span onClick={() => deleteItem(item._id)} className="text-red-500 absolute bottom-0 right-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 w-10 h-10 flex justify-center items-center cursor-pointer">
                     <DeleteOutlineIcon />
                   </span>
