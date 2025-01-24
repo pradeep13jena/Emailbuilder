@@ -3,13 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
-import fileUpload from "express-fileupload";
-import multer from "multer";
-import { fileURLToPath } from 'url';
-import path, { dirname } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import { fileURLToPath } from "url";
+import path, { dirname } from "path";
 
 // Importng routes
 import { template } from "./Routes/template.router.js";
@@ -27,7 +22,7 @@ app.use(
   })
 );
 
-app.use('/node_modules', express.static('node_modules'));
+app.use("/node_modules", express.static("node_modules"));
 
 // Setting up mongoDB
 const MONGO_URI = process.env.MONGO_URI;

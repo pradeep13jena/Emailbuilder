@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import React, { useEffect, useState, useRef } from 'react'
 
 // Importing redux store and slices
 import { useSelector, useDispatch } from 'react-redux'
 import { setTemplate } from '../features/templateSlice.js'
+import { sethtmlContent } from '../features/htmlContentSlice.js'
 import { setSelectedItem } from '../features/selectedItemSlice.js'
 
 // Importing icons
@@ -11,6 +12,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 export default function CreateTemplate() {
   const [file, setFile] = useState(null)
+  const templateRef = useRef(null)
   const dispatch = useDispatch()
 
   const template = useSelector((state) => state.template.template);
@@ -67,9 +69,16 @@ export default function CreateTemplate() {
     getTemplate()
   }, [])
 
+  useEffect(() => {
+    if(templateRef.current) {
+      const htmlContent = templateRef.current.innerHTML
+      dispatch(sethtmlContent(htmlContent))
+    }
+  }, [template])
+
   return (
     <div className='w-3/4 border-[1px] h-[calc(100vh-55px)] border-black rounded-md bg-[#EEECE8] mx-4 py-4'>
-      <div id='createTemplate' className='w-[600px] h-full overflow-y-auto px-3 py-2 border-black mx-auto rounded-md bg-white flex flex-col gap-3'>
+      <div id='createTemplate' ref={templateRef} className='w-[600px] h-full overflow-y-auto px-3 py-2 border-black mx-auto rounded-md bg-white flex flex-col gap-3'>
       {template?.items?.length === 0 ? (
         <div className='flex justify-center items-center h-full'>
           <p className='text-gray-500 font-lato'>Begin your creativity.</p>

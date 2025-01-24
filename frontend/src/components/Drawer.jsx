@@ -51,7 +51,7 @@ export default function Drawer() {
 
   const textBody = {
     'type': 'text',
-    'content': 'Click to edit the text',
+    'content': 'Select on items you want to edit.',
     'style': {    
       "fontSize" : "2rem",
       "color" : "black",
@@ -64,7 +64,7 @@ export default function Drawer() {
     'content': 'https://i.pinimg.com/736x/20/8d/70/208d70e0ad0dba556decdf3a02e825f2.jpg',
     'style': {
       "width" : "800px",
-      "height" : "200px",
+      "height" : "280px",
       "margin" : "0 auto"
     },
   }
